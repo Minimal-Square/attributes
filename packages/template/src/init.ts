@@ -1,14 +1,11 @@
-import { type FsAttributeInit, waitWebflowReady } from '@minimalsquare/attributes-utils';
+import { type MuiAttributeInit, waitWebflowReady } from '@minimalsquare/attributes-utils';
 
-import { logHello } from './actions/console';
+import { getAttribute } from './utils/selectors';
 
-/**
- * Inits the attribute.
- */
-export const init: FsAttributeInit = async () => {
+export const init: MuiAttributeInit = async () => {
   await waitWebflowReady();
 
-  logHello();
+  console.log('Test');
 
   return {};
 };

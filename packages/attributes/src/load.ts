@@ -6,11 +6,8 @@ import { type MuiAttributeKey } from '@minimalsquare/attributes-utils';
  */
 export const loadAttribute = async (attribute: MuiAttributeKey) => {
   switch (attribute) {
-    case 'select': {
-      return import('@minimalsquare/attributes-select');
-    }
-    case 'combobox': {
-      return import('@minimalsquare/attributes-combobox');
+    case 'kbd': {
+      return import('@minimalsquare/attributes-kbd');
     }
   }
 };

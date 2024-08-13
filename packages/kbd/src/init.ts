@@ -1,11 +1,13 @@
 import { type MuiAttributeInit, waitWebflowReady } from '@minimalsquare/attributes-utils';
-
-import { getAttribute } from './utils/selectors';
+import { queryAllElements } from './utils/selectors';
+import { initKbdElement } from './factory';
 
 export const init: MuiAttributeInit = async () => {
   await waitWebflowReady();
 
-  // console.log('Test')
+  const kbdElements = queryAllElements('input');
+
+  kbdElements.map(initKbdElement);
 
   return {};
 };

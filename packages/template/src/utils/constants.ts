@@ -13,6 +13,6 @@ export const SETTINGS = {
    */
   example: {
     key: 'example',
-    values: { value: 'value' },
+    values: { value: 'value', value2: 'value2' },
   },
 } as const satisfies AttributeSettings;

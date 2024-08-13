@@ -21,9 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@finsweet/ts-utils": "^0.40.0",
-    "@minimalsquare/attributes-combobox": "workspace:*",
-    "@minimalsquare/attributes-select": "workspace:*",
+    "@minimalsquare/attributes-kbd": "workspace:*",
     "@minimalsquare/attributes-utils": "workspace:^"
   },
   "devDependencies": {
