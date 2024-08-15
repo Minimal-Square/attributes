@@ -26,13 +26,3 @@ export const ELEMENTS = [
    */
   'item',
 ] as const satisfies AttributeElements;
-
-export const SETTINGS = {
-  /**
-   * Defines a setting example definition.
-   */
-  example: {
-    key: 'example',
-    values: { value: 'value' },
-  },
-} as const satisfies AttributeSettings;

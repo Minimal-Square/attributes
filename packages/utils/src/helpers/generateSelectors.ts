@@ -3,7 +3,7 @@ import type { AttributeSettings, MuiAttributeKey } from '../types/attribute-type
 export function generateSelectors<Elements extends string, Settings extends AttributeSettings>(
   attribute: MuiAttributeKey,
   elements: readonly Elements[],
-  settings: Settings
+  settings?: Settings
 ) {
   /**
    * Type for the return value of getAttribute function
@@ -29,7 +29,7 @@ export function generateSelectors<Elements extends string, Settings extends Attr
     const attributeValue = element.getAttribute(attributeName);
 
     if (filterInvalid && attributeValue) {
-      const settingValues = settings[settingKey]?.values;
+      const settingValues = settings?.[settingKey]?.values;
       return (settingValues && attributeValue in settingValues ? settingValues[attributeValue as keyof typeof settingValues] : undefined) as GetAttributeReturn<
         K,
         F
