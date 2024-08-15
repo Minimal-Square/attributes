@@ -9,5 +9,8 @@ export const loadAttribute = async (attribute: MuiAttributeKey) => {
     case 'kbd': {
       return import('@minimalsquare/attributes-kbd');
     }
+    case 'phoneinput': {
+      return import('@minimalsquare/attributes-phoneinput');
+    }
   }
 };

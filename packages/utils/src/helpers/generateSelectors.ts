@@ -45,7 +45,7 @@ export function generateSelectors<Elements extends string, Settings extends Attr
    * @param attributeElement - The attribute element type to search for.
    * @returns The closest matching element, or null if not found.
    */
-  const getClosestElement = (element: Element, attributeElement: Elements): Element | null => {
+  const getClosestElement = (element: HTMLElement, attributeElement: Elements): HTMLElement | null => {
     return element.closest(`[mui-${attribute}-element="${attributeElement}"]`);
   };
 
@@ -55,16 +55,6 @@ export function generateSelectors<Elements extends string, Settings extends Attr
    * @returns A string selector for the element.
    */
   const getElementSelector = (element: Elements) => `[mui-${attribute}-element="${element}"]`;
-
-  //   /**
-  //    * Gets the index of a specific instance of an element.
-  //    * @param element - The element type.
-  //    * @param instance - The instance identifier (string or number).
-  //    * @returns The index of the element in the elements array.
-  //    */
-  //   const getInstance = (element: Elements, instance: string | number): number => {
-  //     return elements.indexOf(element);
-  //   };
 
   /**
    * Generates the attribute name for a setting.
@@ -97,22 +87,22 @@ export function generateSelectors<Elements extends string, Settings extends Attr
    * @param scope - Optional. The scope to search within. Can be any element or the document. Defaults to document.
    * @returns An array of matching elements.
    */
-  const queryAllElements = (element: Elements, scope?: Element | Document): HTMLElement[] =>
+  const queryAllElements = (element: Elements, scope?: HTMLElement | Document): HTMLElement[] =>
     Array.from((scope || document).querySelectorAll<HTMLElement>(`[mui-${attribute}-element="${element}"]`));
 
   /**
    * Queries the first element of a specific type within a given scope.
    * @param element - The element type to query.
-   * @param scope - Optional. The scope to search within. Can be any element or the document. Defaults to document.
+   * @param scope - Optional. The scope to search within. Can be any HTMLElement or the document. Defaults to document.
    * @returns The first matching element or null if not found.
    */
-  const queryElement = (element: Elements, scope?: Element | Document) => (scope || document).querySelector(`[mui-${attribute}-element="${element}"]`);
+  const queryElement = (element: Elements, scope?: HTMLElement | Document): HTMLElement | null =>
+    (scope || document).querySelector<HTMLElement>(`[mui-${attribute}-element="${element}"]`);
 
   return {
     getAttribute,
     getClosestElement,
     getElementSelector,
-    // getInstance,
     getSettingAttributeName,
     getSettingSelector,
     hasAttributeValue,

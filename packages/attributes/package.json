@@ -22,6 +22,7 @@
   "license": "ISC",
   "dependencies": {
     "@minimalsquare/attributes-kbd": "workspace:*",
+    "@minimalsquare/attributes-phoneinput": "workspace:*",
     "@minimalsquare/attributes-utils": "workspace:^"
   },
   "devDependencies": {
