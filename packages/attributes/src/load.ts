@@ -12,5 +12,8 @@ export const loadAttribute = async (attribute: MuiAttributeKey) => {
     case 'phoneinput': {
       return import('@minimalsquare/attributes-phoneinput');
     }
+    case 'passwordvisibility': {
+      return import('@minimalsquare/attributes-passwordvisibility');
+    }
   }
 };

@@ -2,7 +2,7 @@
  * Detect user location based on IP address
  * @returns {Promise<string>} Promise that resolves with the user's country code
  * @example
- * const countryCode = await getUserLocation();
+ * const userAlpha2Code = await getUserLocation();
  */
 export const getUserLocation = async (): Promise<string> => {
   try {

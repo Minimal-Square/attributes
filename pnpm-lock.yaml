@@ -63,6 +63,9 @@ importers:
       '@minimalsquare/attributes-kbd':
         specifier: workspace:*
         version: link:../kbd
+      '@minimalsquare/attributes-passwordvisibility':
+        specifier: workspace:*
+        version: link:../passwordvisibility
       '@minimalsquare/attributes-phoneinput':
         specifier: workspace:*
         version: link:../phoneinput
@@ -81,6 +84,12 @@ importers:
         version: 4.16.2
 
   packages/kbd:
+    dependencies:
+      '@minimalsquare/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+
+  packages/passwordvisibility:
     dependencies:
       '@minimalsquare/attributes-utils':
         specifier: workspace:*
