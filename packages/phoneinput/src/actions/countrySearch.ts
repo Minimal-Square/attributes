@@ -56,6 +56,4 @@ export const countrySearch = (event: KeyboardEvent, countries: CountryData[], li
       matchedElement.focus();
     }
   }
-
-  console.log('Filtered country:', filteredCountries, 'Buffer:', buffer);
 };

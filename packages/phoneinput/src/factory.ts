@@ -13,7 +13,7 @@ import {
   getSelectedItemElement,
   keyboardNavigation,
 } from './actions';
-import { closeDropdown } from '@finsweet/ts-utils';
+import { closeDropdown, CURRENT_CSS_CLASS } from '@finsweet/ts-utils';
 import type { CountryData } from './types';
 
 // Get the user's location
@@ -53,7 +53,7 @@ export const initPhoneInputElement = (phoneInputElement: HTMLElement) => {
 
   // Add w--current to the initial selected item
   const initialSelectedItem = getSelectedItemElement(selectedData, phoneInputElement);
-  if (initialSelectedItem) initialSelectedItem.classList.add('w--current');
+  if (initialSelectedItem) initialSelectedItem.classList.add(CURRENT_CSS_CLASS);
 
   // Listen for country selection
   listElement?.addEventListener('click', (event) => {
@@ -65,7 +65,6 @@ export const initPhoneInputElement = (phoneInputElement: HTMLElement) => {
     // Based on the selected country, find the corresponding country data
     if (!selectedAlpha2Code) return;
     const selectedCountry = countries.find((country) => country.alpha2Code === selectedAlpha2Code);
-    console.log(selectedCountry);
 
     // Update the selectedData object with the selected country data
     if (!selectedCountry) return;
@@ -86,12 +85,12 @@ export const initPhoneInputElement = (phoneInputElement: HTMLElement) => {
     closeDropdown(dropdownToggleElement, true);
 
     // Remove w--current from the previous selected item
-    const previousSelectedItem = phoneInputElement.querySelector('.w--current');
-    if (previousSelectedItem) previousSelectedItem.classList.remove('w--current');
+    const previousSelectedItem = phoneInputElement.querySelector(`.${CURRENT_CSS_CLASS}`);
+    if (previousSelectedItem) previousSelectedItem.classList.remove(CURRENT_CSS_CLASS);
 
     // Add w--current to the new selected item
     const newSelectedItem = getSelectedItemElement(selectedData, phoneInputElement);
-    if (newSelectedItem) newSelectedItem.classList.add('w--current');
+    if (newSelectedItem) newSelectedItem.classList.add(CURRENT_CSS_CLASS);
   });
 
   // Initialize country search feature when dropdown is open
