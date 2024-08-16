@@ -1,81 +1,194 @@
-import { getCheckedBackgroundColor, getGroupCheckboxes, getMainCheckboxes } from './actions';
-import { getSettingAttributeName, queryElement } from './utils/selectors';
+import { getCheckedBackgroundColor } from './actions';
+import { queryElement } from './utils/selectors';
 
-let checkedBackgroundColor: string = '';
-let mainCheckboxes: HTMLInputElement[] = [];
-let groupCheckboxes: HTMLInputElement[] = [];
+// Extend HTMLInputElement to include our custom properties
+interface ExtendedHTMLInputElement extends HTMLInputElement {
+  groupCheckboxes?: ExtendedHTMLInputElement[];
+  mainCheckbox?: ExtendedHTMLInputElement;
+}
 
-export const initCheckboxElement = async (checkboxElement: HTMLElement) => {
-  const checkbox = checkboxElement.querySelector<HTMLInputElement>('input[type="checkbox"]');
-  const checkedIcon = queryElement('checked', checkboxElement);
-  const indeterminateIcon = queryElement('indeterminate', checkboxElement);
-  const form = checkboxElement.closest('form');
+export const initCheckboxElement = async (mainCheckboxElement: HTMLElement, groupCheckboxElements: HTMLElement[] = []) => {
+  const mainCheckbox = mainCheckboxElement.querySelector<ExtendedHTMLInputElement>('input[type="checkbox"]');
+  const fakeCheckbox = mainCheckbox?.previousElementSibling as HTMLDivElement;
+  const checkedIcon = queryElement('checked', mainCheckboxElement);
+  const indeterminateIcon = queryElement('indeterminate', mainCheckboxElement);
 
-  const checkboxName = checkbox?.getAttribute('name');
+  if (!mainCheckbox || !fakeCheckbox || !checkedIcon || !indeterminateIcon) return;
 
-  // Check if the checkbox is started with checked state
-  if (!checkbox) return;
-  if (!checkedIcon || !indeterminateIcon) return;
+  const groupCheckboxes = groupCheckboxElements.filter((checkbox): checkbox is ExtendedHTMLInputElement => checkbox instanceof HTMLInputElement);
 
-  await getCheckedBackgroundColor()
-    .color()
-    .then((color) => (checkedBackgroundColor = color));
+  // Create a relationship between main checkbox and group checkboxes
+  mainCheckbox.groupCheckboxes = groupCheckboxes;
+  groupCheckboxes.forEach((checkbox) => {
+    checkbox.mainCheckbox = mainCheckbox;
+  });
 
-  // Get the main checkbox
-  if (!checkboxName || !form) return;
-  const mainCheckbox = getMainCheckboxes(checkboxName, form);
+  mainCheckbox.addEventListener('change', () => {
+    if (mainCheckbox.checked) {
+      mainCheckbox.indeterminate = false;
+      mainCheckbox.checked = true;
+      fakeCheckbox.classList.add('w--redirected-checked');
+      checkedIcon.style.display = 'flex';
+      indeterminateIcon.style.display = 'none';
+    } else if (mainCheckbox.indeterminate) {
+      mainCheckbox.checked = false;
+      mainCheckbox.indeterminate = true;
+      fakeCheckbox.classList.add('w--redirected-checked');
+      checkedIcon.style.display = 'none';
+      indeterminateIcon.style.display = 'flex';
+    } else {
+      mainCheckbox.checked = false;
+      mainCheckbox.indeterminate = false;
+      fakeCheckbox.classList.remove('w--redirected-checked');
+      checkedIcon.style.display = 'none';
+      indeterminateIcon.style.display = 'none';
+    }
 
-  // Get the mai of the checkbox
-  const groupCheckboxes = getGroupCheckboxes(checkboxName, form);
+    const isChecked = mainCheckbox.checked;
 
-  // console.log('Group checkboxes:', groupCheckboxes);
-  // console.log('Main checkboxes:', mainCheckbox);
+    // Update group checkboxes
+    groupCheckboxes.forEach((checkbox) => {
+      checkbox.checked = isChecked;
+      const groupFakeCheckbox = checkbox.previousElementSibling as HTMLDivElement;
+      if (isChecked) {
+        groupFakeCheckbox.classList.add('w--redirected-checked');
+        fakeCheckbox.classList.remove('w--redirected-checked');
+        checkedIcon.style.display = 'flex';
+        indeterminateIcon.style.display = 'none';
+      } else {
+        groupFakeCheckbox.classList.remove('w--redirected-checked');
+        fakeCheckbox.classList.add('w--redirected-checked');
+        checkedIcon.style.display = 'none';
+        indeterminateIcon.style.display = 'none';
+      }
+    });
 
-  // mainCheckbox?.addEventListener('change', () => {
-  //   console.log('Main checkbox changed:', mainCheckbox);
-  // });
+    // Update main checkbox state based on group checkboxes
+    const allChecked = groupCheckboxes.every((checkbox) => checkbox.checked);
+    const someChecked = groupCheckboxes.some((checkbox) => checkbox.checked);
+
+    console.log(
+      'Group Checkboxes State:',
+      groupCheckboxes.map((checkbox) => checkbox.checked)
+    );
+
+    console.log('Main Checkbox State:', {
+      checked: mainCheckbox.checked,
+      indeterminate: mainCheckbox.indeterminate,
+    });
+  });
+
+  groupCheckboxes.forEach((checkbox, index) => {
+    checkbox.addEventListener('change', () => {
+      // Update main checkbox state based on group checkboxes
+      const allChecked = groupCheckboxes.every((checkbox) => checkbox.checked);
+      const someChecked = groupCheckboxes.some((checkbox) => checkbox.checked);
+
+      if (allChecked) {
+        mainCheckbox.checked = true;
+        mainCheckbox.indeterminate = false;
+        fakeCheckbox.classList.add('w--redirected-checked');
+        checkedIcon.style.display = 'flex';
+        indeterminateIcon.style.display = 'none';
+      } else if (someChecked) {
+        mainCheckbox.checked = false;
+        mainCheckbox.indeterminate = true;
+        fakeCheckbox.classList.add('w--redirected-checked');
+        checkedIcon.style.display = 'none';
+        indeterminateIcon.style.display = 'flex';
+      } else {
+        mainCheckbox.checked = false;
+        mainCheckbox.indeterminate = false;
+        fakeCheckbox.classList.remove('w--redirected-checked');
+        checkedIcon.style.display = 'none';
+        indeterminateIcon.style.display = 'none';
+      }
+
+      console.log(
+        'Group Checkboxes State:',
+        groupCheckboxes.map((checkbox) => checkbox.checked)
+      );
+
+      console.log('Main Checkbox State:', {
+        checked: mainCheckbox.checked,
+        indeterminate: mainCheckbox.indeterminate,
+      });
+    });
+  });
+
+  // Initial state update
+  const allChecked = groupCheckboxes.every((checkbox) => checkbox.checked);
+  const someChecked = groupCheckboxes.some((checkbox) => checkbox.checked);
+
+  if (mainCheckbox.checked) {
+    fakeCheckbox.classList.add('w--redirected-checked');
+
+    const isChecked = mainCheckbox.checked;
+
+    groupCheckboxes.forEach((checkbox) => {
+      checkbox.checked = isChecked;
+      const groupFakeCheckbox = checkbox.previousElementSibling as HTMLDivElement;
+      const groupCheckedIcon = queryElement('checked', checkbox.parentElement as HTMLElement);
+      const groupIndeterminateIcon = queryElement('indeterminate', checkbox.parentElement as HTMLElement);
+
+      if (isChecked) {
+        groupFakeCheckbox.classList.add('w--redirected-checked');
+        if (groupCheckedIcon) groupCheckedIcon.style.display = 'flex';
+        if (groupIndeterminateIcon) groupIndeterminateIcon.style.display = 'none';
+      } else {
+        groupFakeCheckbox.classList.remove('w--redirected-checked');
+        if (groupCheckedIcon) groupCheckedIcon.style.display = 'none';
+        if (groupIndeterminateIcon) groupIndeterminateIcon.style.display = 'none';
+      }
+    });
+  }
+  // initial state logic for group checkboxes
+  groupCheckboxes.forEach((checkbox) => {
+    const allChecked = groupCheckboxes.every((checkbox) => checkbox.checked);
+    const someChecked = groupCheckboxes.some((checkbox) => checkbox.checked);
+    const isChecked = checkbox.checked;
+
+    if (allChecked) {
+      mainCheckbox.checked = true;
+      mainCheckbox.indeterminate = false;
+      fakeCheckbox.classList.add('w--redirected-checked');
+      checkedIcon.style.display = 'flex';
+      indeterminateIcon.style.display = 'none';
+    } else if (someChecked) {
+      mainCheckbox.indeterminate = true;
+      fakeCheckbox.classList.add('w--redirected-checked');
+      checkedIcon.style.display = 'none';
+      indeterminateIcon.style.display = 'flex';
+    } else {
+      mainCheckbox.indeterminate = false;
+      fakeCheckbox.classList.remove('w--redirected-checked');
+      checkedIcon.style.display = 'none';
+      indeterminateIcon.style.display = 'none';
+    }
+
+    const groupFakeCheckbox = checkbox.previousElementSibling as HTMLDivElement;
+    const groupCheckedIcon = queryElement('checked', checkbox.parentElement as HTMLElement);
+    const groupIndeterminateIcon = queryElement('indeterminate', checkbox.parentElement as HTMLElement);
+
+    if (isChecked) {
+      groupFakeCheckbox.classList.add('w--redirected-checked');
+      if (groupCheckedIcon) groupCheckedIcon.style.display = 'flex';
+      if (groupIndeterminateIcon) groupIndeterminateIcon.style.display = 'none';
+    } else {
+      groupFakeCheckbox.classList.remove('w--redirected-checked');
+      if (groupCheckedIcon) groupCheckedIcon.style.display = 'flex';
+      if (groupIndeterminateIcon) groupIndeterminateIcon.style.display = 'none';
+    }
+  });
+
+  // Initial console.logs
+  console.log(
+    'Group Checkboxes State:',
+    groupCheckboxes.map((checkbox) => checkbox.checked)
+  );
+
+  console.log('Main Checkbox State:', {
+    checked: mainCheckbox.checked,
+    indeterminate: mainCheckbox.indeterminate,
+  });
 };
-// // If any of the checkbox in the group is checked, show the indeterminate icon
-// checkboxGroupWrapper?.addEventListener('change', async () => {
-//   console.log('Group change:', checkboxGroupWrapper);
-//   const groupCheckboxes = checkboxGroupWrapper.querySelectorAll('input[type="checkbox"]');
-//   const allChecked = Array.from(groupCheckboxes).every((cb) => (cb as HTMLInputElement).checked);
-//   const allUnchecked = Array.from(groupCheckboxes).every((cb) => !(cb as HTMLInputElement).checked);
-
-//   const groupSelector = getSettingAttributeName('group');
-//   const mainCheckbox = checkboxGroupWrapper.querySelector(`[${groupSelector}="${checkboxName}"] input[type="checkbox"]`) as HTMLInputElement;
-
-//   if (mainCheckbox) {
-//     if (!checkedBackgroundColor) {
-//       await getCheckedBackgroundColor()
-//         .color()
-//         .then((color) => (checkedBackgroundColor = color));
-//     }
-
-//     if (!allChecked && !allUnchecked) {
-//       mainCheckbox.indeterminate = true;
-//       checkedIcon.style.display = 'none';
-//       indeterminateIcon.style.display = 'flex';
-//       if (indeterminateIcon.parentElement && checkedBackgroundColor) {
-//         indeterminateIcon.parentElement.style.backgroundColor = checkedBackgroundColor;
-//       }
-//     } else {
-//       mainCheckbox.indeterminate = false;
-//       if (allChecked) {
-//         mainCheckbox.checked = true;
-//         checkedIcon.style.display = 'flex';
-//         indeterminateIcon.style.display = 'none';
-//         if (checkedIcon.parentElement && checkedBackgroundColor) {
-//           checkedIcon.parentElement.style.backgroundColor = checkedBackgroundColor;
-//         }
-//       } else {
-//         mainCheckbox.checked = false;
-//         checkedIcon.style.display = 'none';
-//         indeterminateIcon.style.display = 'none';
-//         if (indeterminateIcon.parentElement) {
-//           indeterminateIcon.parentElement.style.backgroundColor = 'transparent';
-//         }
-//       }
-//     }
-//   }
-// });
