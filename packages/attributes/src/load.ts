@@ -15,5 +15,8 @@ export const loadAttribute = async (attribute: MuiAttributeKey) => {
     case 'passwordvisibility': {
       return import('@minimalsquare/attributes-passwordvisibility');
     }
+    case 'checkbox': {
+      return import('@minimalsquare/attributes-checkbox');
+    }
   }
 };

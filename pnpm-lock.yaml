@@ -60,6 +60,9 @@ importers:
 
   packages/attributes:
     dependencies:
+      '@minimalsquare/attributes-checkbox':
+        specifier: workspace:*
+        version: link:../checkbox
       '@minimalsquare/attributes-kbd':
         specifier: workspace:*
         version: link:../kbd
@@ -82,6 +85,12 @@ importers:
       tsx:
         specifier: ^4.16.2
         version: 4.16.2
+
+  packages/checkbox:
+    dependencies:
+      '@minimalsquare/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
 
   packages/kbd:
     dependencies:
