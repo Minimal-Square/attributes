@@ -1,4 +1,4 @@
-import { TEMPLATE_ATTRIBUTE, generateSelectors } from '@minimalsquare/attributes-utils';
+import { FORMVALIDATION_ATTRIBUTE, generateSelectors } from '@minimalsquare/attributes-utils';
 import { ELEMENTS, SETTINGS } from './constants';
 
 export const {
@@ -10,4 +10,4 @@ export const {
   hasAttributeValue,
   queryAllElements,
   queryElement,
-} = generateSelectors(TEMPLATE_ATTRIBUTE, ELEMENTS, SETTINGS);
+} = generateSelectors(FORMVALIDATION_ATTRIBUTE, ELEMENTS, SETTINGS);

@@ -1,0 +1,22 @@
+{
+  "name": "@minimalsquare/attributes-formvalidation",
+  "version": "0.0.0",
+  "description": "ATTRIBUTE_DESCRIPTION",
+  "private": true,
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint ./src && prettier --check ./src",
+    "lint:fix": "eslint ./src --fix && prettier --write ./src",
+    "check": "tsc --noEmit"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@minimalsquare/attributes-utils": "workspace:*"
+  }
+}

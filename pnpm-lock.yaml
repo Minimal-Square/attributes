@@ -63,6 +63,9 @@ importers:
       '@minimalsquare/attributes-checkbox':
         specifier: workspace:*
         version: link:../checkbox
+      '@minimalsquare/attributes-formvalidation':
+        specifier: workspace:*
+        version: link:../formvalidation
       '@minimalsquare/attributes-kbd':
         specifier: workspace:*
         version: link:../kbd
@@ -87,6 +90,12 @@ importers:
         version: 4.16.2
 
   packages/checkbox:
+    dependencies:
+      '@minimalsquare/attributes-utils':
+        specifier: workspace:*
+        version: link:../utils
+
+  packages/formvalidation:
     dependencies:
       '@minimalsquare/attributes-utils':
         specifier: workspace:*

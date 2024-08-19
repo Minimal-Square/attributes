@@ -25,4 +25,9 @@ export const ELEMENTS = [
    * This is dropdown menu item element.
    */
   'item',
+
+  /**
+   * This is selected element.
+   */
+  'selected',
 ] as const satisfies AttributeElements;

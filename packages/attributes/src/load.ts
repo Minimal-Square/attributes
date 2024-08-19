@@ -18,5 +18,8 @@ export const loadAttribute = async (attribute: MuiAttributeKey) => {
     case 'checkbox': {
       return import('@minimalsquare/attributes-checkbox');
     }
+    case 'formvalidation': {
+      return import('@minimalsquare/attributes-formvalidation');
+    }
   }
 };

@@ -25,6 +25,7 @@
     "@minimalsquare/attributes-phoneinput": "workspace:*",
     "@minimalsquare/attributes-passwordvisibility": "workspace:*",
     "@minimalsquare/attributes-checkbox": "workspace:*",
+    "@minimalsquare/attributes-formvalidation": "workspace:*",
     "@minimalsquare/attributes-utils": "workspace:^"
   },
   "devDependencies": {

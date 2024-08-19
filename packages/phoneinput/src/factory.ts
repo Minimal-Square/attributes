@@ -53,14 +53,30 @@ export const initPhoneInputElement = (phoneInputElement: HTMLElement) => {
 
   // Add w--current to the initial selected item
   const initialSelectedItem = getSelectedItemElement(selectedData, phoneInputElement);
-  if (initialSelectedItem) initialSelectedItem.classList.add(CURRENT_CSS_CLASS);
+
+  const selectedIcon = queryElement('selected', initialSelectedItem) as HTMLElement;
+  if (selectedIcon) selectedIcon.style.display = 'block';
 
   // Listen for country selection
   listElement?.addEventListener('click', (event) => {
-    const selectedItem = (event.target as HTMLElement).closest(getElementSelector('item'));
+    const selectedItem = (event.target as HTMLElement).closest(getElementSelector('item')) as HTMLElement;
 
-    const selectedAlpha2CodeElement = selectedItem?.querySelector(getElementSelector('value'));
+    const selectedAlpha2CodeElement = queryElement('value', selectedItem) as HTMLElement;
     const selectedAlpha2Code = selectedAlpha2CodeElement?.textContent;
+
+    const currentSelectedItem = getSelectedItemElement(selectedData, phoneInputElement);
+
+    // Remove display from previously selected item icon
+    if (currentSelectedItem) {
+      const previousSelectedIcon = currentSelectedItem.querySelector(getElementSelector('selected')) as HTMLElement;
+      if (previousSelectedIcon) previousSelectedIcon.style.display = 'none';
+    }
+
+    // Display the icon for the newly selected item
+    if (selectedItem) {
+      const newSelectedIcon = selectedItem.querySelector(getElementSelector('selected')) as HTMLElement;
+      if (newSelectedIcon) newSelectedIcon.style.display = 'block';
+    }
 
     // Based on the selected country, find the corresponding country data
     if (!selectedAlpha2Code) return;
@@ -83,14 +99,6 @@ export const initPhoneInputElement = (phoneInputElement: HTMLElement) => {
 
     // Close the dropdown when a country is selected
     closeDropdown(dropdownToggleElement, true);
-
-    // Remove w--current from the previous selected item
-    const previousSelectedItem = phoneInputElement.querySelector(`.${CURRENT_CSS_CLASS}`);
-    if (previousSelectedItem) previousSelectedItem.classList.remove(CURRENT_CSS_CLASS);
-
-    // Add w--current to the new selected item
-    const newSelectedItem = getSelectedItemElement(selectedData, phoneInputElement);
-    if (newSelectedItem) newSelectedItem.classList.add(CURRENT_CSS_CLASS);
   });
 
   // Initialize country search feature when dropdown is open

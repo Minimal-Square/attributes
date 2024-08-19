@@ -112,7 +112,9 @@ function logServedFiles() {
       const location = `${SERVE_ORIGIN}${relativePath.replace(/\\/g, '/')}`;
 
       // Create import suggestion
-      const tag = location.endsWith('.css') ? `<link href="${location}" rel="stylesheet" type="text/css"/>` : `<script defer src="${location}"></script>`;
+      const tag = location.endsWith('.css')
+        ? `<link href="${location}" rel="stylesheet" type="text/css"/>`
+        : `<script async type="module" src="${location}"></script>`;
 
       return {
         'File Location': location,

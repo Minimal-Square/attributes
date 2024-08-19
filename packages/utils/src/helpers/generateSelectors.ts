@@ -19,7 +19,11 @@ export function generateSelectors<Elements extends string, Settings extends Attr
    * @param filterInvalid - Optional. If true, must be a valid setting value defined in constants.
    * @returns The attribute value if it exists, or undefined. If filterInvalid is true, returns a valid setting value or undefined.
    */
-  const getAttribute = <K extends keyof Settings, F extends boolean = false>(element: Element, settingKey: K, filterInvalid?: F): GetAttributeReturn<K, F> => {
+  const getAttribute = <K extends keyof Settings, F extends boolean = false>(
+    element: HTMLElement,
+    settingKey: K,
+    filterInvalid?: F
+  ): GetAttributeReturn<K, F> => {
     const attributeName = `mui-${attribute}-${String(settingKey)}`;
 
     if (!element.hasAttribute(attributeName)) {
@@ -41,12 +45,34 @@ export function generateSelectors<Elements extends string, Settings extends Attr
 
   /**
    * Finds the closest element with the specified attribute element type, starting from the given element.
+   * Searches through siblings, then parents and their siblings.
    * @param element - The starting element to search from.
    * @param attributeElement - The attribute element type to search for.
    * @returns The closest matching element, or null if not found.
    */
   const getClosestElement = (element: HTMLElement, attributeElement: Elements): HTMLElement | null => {
-    return element.closest(`[mui-${attribute}-element="${attributeElement}"]`);
+    let currentElement: HTMLElement | null = element;
+
+    while (currentElement) {
+      // Check if the current element matches
+      if (currentElement.getAttribute(`mui-${attribute}-element`) === attributeElement) {
+        return currentElement;
+      }
+
+      // Check siblings
+      let sibling: Element | null = currentElement.nextElementSibling;
+      while (sibling) {
+        if (sibling.getAttribute(`mui-${attribute}-element`) === attributeElement) {
+          return sibling as HTMLElement;
+        }
+        sibling = sibling.nextElementSibling;
+      }
+
+      // Move to the parent
+      currentElement = currentElement.parentElement;
+    }
+
+    return null;
   };
 
   /**
