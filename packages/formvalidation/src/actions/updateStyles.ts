@@ -1,30 +1,31 @@
+import type { UpdateStyles } from '../types';
+
 /**
- * This is an example reusable action.
+ * Updates the styles of input and message elements based on validation result.
+ * @param isValid - The validation result.
+ * @param inputElement - The input element.
+ * @param messageElement - The message element.
+ * @param errorClass - The class to add if the input is invalid.
+ * @param successClass - The class to add if the input is valid.
+ * @param showSuccessMessage - Whether to show the success message.
  */
-export const updateStyles = (
-  isValid: boolean,
-  inputElement: HTMLInputElement | HTMLTextAreaElement,
-  messageElement: HTMLElement,
-  errorClass?: string,
-  successClass?: string,
-  showSuccessMessage?: boolean
-) => {
+export const updateStyles: UpdateStyles = ({ isValid, inputElement, messageElement, errorClass, successClass, showSuccessMessage }) => {
   if (errorClass) {
     if (isValid) {
       inputElement.classList.remove(errorClass);
-      messageElement.classList.remove(errorClass);
+      if (messageElement) messageElement.classList.remove(errorClass);
       if (successClass) {
         inputElement.classList.add(successClass);
-        if (showSuccessMessage) {
+        if (showSuccessMessage && messageElement) {
           messageElement.classList.add(successClass);
         }
       }
-    } else if (!isValid) {
+    } else {
       inputElement.classList.add(errorClass);
-      messageElement.classList.add(errorClass);
+      if (messageElement) messageElement.classList.add(errorClass);
       if (successClass) {
         inputElement.classList.remove(successClass);
-        if (showSuccessMessage) {
+        if (showSuccessMessage && messageElement) {
           messageElement.classList.remove(successClass);
         }
       }
